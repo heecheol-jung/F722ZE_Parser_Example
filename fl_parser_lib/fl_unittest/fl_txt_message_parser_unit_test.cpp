@@ -42,7 +42,7 @@ TEST_F(Fl_Txt_Message_Parser_UnitTest, TestReadHardwareVersionCommandParse)
 TEST_F(Fl_Txt_Message_Parser_UnitTest, TestReadHardwareVersionOkResponseParse)
 {
   // Version string.
-  fl_hw_ver_t hw_ver;
+  fl_hw_ver_resp_t hw_ver;
   sprintf(hw_ver.version, HW_VER);
   _len = fl_txt_msg_build_response(DEVICE_ID, FL_MSG_ID_READ_HW_VERSION, FL_OK,
     &hw_ver, sizeof(hw_ver),
@@ -58,7 +58,7 @@ TEST_F(Fl_Txt_Message_Parser_UnitTest, TestReadHardwareVersionOkResponseParse)
   EXPECT_EQ((uint8_t)FL_MSG_ID_READ_HW_VERSION, _parsed_msg.msg_id);
   EXPECT_EQ((uint8_t)FL_OK, _parsed_msg.error);
 
-  fl_hw_ver_t* parsed_hw_ver = (fl_hw_ver_t*)&_parsed_msg.payload;
+  fl_hw_ver_resp_t* parsed_hw_ver = (fl_hw_ver_resp_t*)&_parsed_msg.payload;
   EXPECT_EQ((uint8_t)0, (uint8_t)strcmp(hw_ver.version, parsed_hw_ver->version));
 }
 
@@ -96,7 +96,7 @@ TEST_F(Fl_Txt_Message_Parser_UnitTest, TestReadFirmwareVersionCommandParse)
 TEST_F(Fl_Txt_Message_Parser_UnitTest, TestReadFirmwareVersionOkResponseParse)
 {
   // Version string.
-  fl_fw_ver_t fw_ver;
+  fl_fw_ver_resp_t fw_ver;
   sprintf(fw_ver.version, FW_VER);
   _len = fl_txt_msg_build_response(DEVICE_ID, FL_MSG_ID_READ_FW_VERSION, FL_OK,
     &fw_ver, sizeof(fw_ver),
@@ -112,7 +112,7 @@ TEST_F(Fl_Txt_Message_Parser_UnitTest, TestReadFirmwareVersionOkResponseParse)
   EXPECT_EQ((uint8_t)FL_MSG_ID_READ_FW_VERSION, _parsed_msg.msg_id);
   EXPECT_EQ((uint8_t)FL_OK, _parsed_msg.error);
 
-  fl_fw_ver_t* parsed_fw_ver = (fl_fw_ver_t*)&_parsed_msg.payload;
+  fl_fw_ver_resp_t* parsed_fw_ver = (fl_fw_ver_resp_t*)&_parsed_msg.payload;
   EXPECT_EQ((uint8_t)0, (uint8_t)strcmp(fw_ver.version, parsed_fw_ver->version));
 }
 

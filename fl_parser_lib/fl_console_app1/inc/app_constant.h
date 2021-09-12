@@ -1,0 +1,13 @@
+#pragma once
+#define STR_DEVICE_SIMULATOR    "device simulator"
+#define STR_HOST_SIMULATOR      "host simulator"
+#define STR_RESULT_HANDLING     "result handling"
+#define STR_NONE                "none"
+#define STR_CALLBACK            "callback"
+#define STR_OUT_PARAM           "out param"
+#define STR_BUTTON_PRESS        "button press"
+#define STR_BUTTON_RELEASE      "button release"
+#define STR_GENERAL_EXAMPLE     "general example"
+#define STR_SHOW_STRUCT_INFO    "show struct info"
+#define STR_SHOW_ASCII_PROTOCOL_EXAMPLES "show ascii protocol examples"
+#define STR_BIN_PROTOCOL_TEST   "bin protocol test"

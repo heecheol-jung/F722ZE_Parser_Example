@@ -51,7 +51,7 @@ typedef struct _fl_txt_msg
   fl_status_t       error;
 
   // It is for maximum message buffer.
-  fl_fw_ver_t       payload;
+  fl_fw_ver_resp_t  payload;
 } fl_txt_msg_t;
 
 FL_END_PACK
@@ -72,6 +72,7 @@ FL_DECLARE(fl_status_t) fl_txt_msg_build_response(
   uint32_t arg_buf_len,
   uint8_t* packet_buf,
   uint32_t packet_buf_len);
+
 FL_DECLARE(char*) fl_txt_msg_get_message_name(const uint8_t message_id);
 
 FL_END_DECLS

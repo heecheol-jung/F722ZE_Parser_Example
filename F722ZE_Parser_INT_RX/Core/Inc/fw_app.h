@@ -10,7 +10,19 @@
 
 #include "fl_def.h"
 #include "fl_queue.h"
+
+#define FW_APP_TXT_PARSER           (0)
+#define FW_APP_BIN_PARSER           (1)
+
+//#define FW_APP_PARSER               FW_APP_TXT_PARSER
+#define FW_APP_PARSER               FW_APP_BIN_PARSER
+
+#if FW_APP_PARSER == FW_APP_TXT_PARSER
 #include "fl_txt_message_parser.h"
+#else
+#include "fl_bin_message_parser.h"
+#include "fl_util.h"
+#endif
 
 #define FW_APP_HW_MAJOR             (0)
 #define FW_APP_HW_MINOR             (0)
@@ -28,6 +40,7 @@
 #define FW_APP_PROTO_TX_TIMEOUT     (500)
 
 #define FW_APP_Q_SIZE               (64)
+#define FW_APP_TX_MSG_LENGTH        (64)
 
 FL_BEGIN_PACK1
 
@@ -37,8 +50,12 @@ typedef struct _fw_app_proto_manager
   // UART handle.
   FW_APP_UART_HANDLE      uart_handle;
   fl_queue_t              q;
+#if FW_APP_PARSER == FW_APP_TXT_PARSER
   fl_txt_msg_parser_t     parser_handle;
-  uint8_t                 out_buf[FL_TXT_MSG_MAX_LENGTH];
+#else
+  fl_bin_msg_parser_t     parser_handle;
+#endif
+  uint8_t                 out_buf[FW_APP_TX_MSG_LENGTH];
   uint8_t                 out_length;
   uint8_t                 rx_buf[1];
 } fw_app_proto_manager_t;

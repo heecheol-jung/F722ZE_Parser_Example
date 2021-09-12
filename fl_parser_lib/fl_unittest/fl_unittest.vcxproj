@@ -36,6 +36,8 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="fl_bin_message_parser_unit_test.cpp" />
+    <ClCompile Include="fl_bin_message_unit_test.cpp" />
     <ClCompile Include="fl_txt_message_parser_unit_test.cpp" />
     <ClCompile Include="fl_txt_message_unit_test.cpp" />
     <ClCompile Include="pch.cpp">

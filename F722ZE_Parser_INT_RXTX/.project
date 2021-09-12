@@ -31,6 +31,16 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>Core/Inc/fl_bin_message.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/fl_common/inc/fl_bin_message.h</locationURI>
+		</link>
+		<link>
+			<name>Core/Inc/fl_bin_message_parser.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/fl_common/inc/fl_bin_message_parser.h</locationURI>
+		</link>
+		<link>
 			<name>Core/Inc/fl_def.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/fl_common/inc/fl_def.h</locationURI>
@@ -51,6 +61,21 @@
 			<locationURI>PARENT-1-PROJECT_LOC/fl_common/inc/fl_txt_message_parser.h</locationURI>
 		</link>
 		<link>
+			<name>Core/Inc/fl_util.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/fl_common/inc/fl_util.h</locationURI>
+		</link>
+		<link>
+			<name>Core/Src/fl_bin_message.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/fl_common/src/fl_bin_message.c</locationURI>
+		</link>
+		<link>
+			<name>Core/Src/fl_bin_message_parser.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/fl_common/src/fl_bin_message_parser.c</locationURI>
+		</link>
+		<link>
 			<name>Core/Src/fl_txt_message.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/fl_common/src/fl_txt_message.c</locationURI>
@@ -59,6 +84,11 @@
 			<name>Core/Src/fl_txt_message_parser.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/fl_common/src/fl_txt_message_parser.c</locationURI>
+		</link>
+		<link>
+			<name>Core/Src/fl_util.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/fl_common/src/fl_util.c</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

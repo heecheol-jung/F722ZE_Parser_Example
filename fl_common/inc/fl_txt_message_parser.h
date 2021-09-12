@@ -17,28 +17,28 @@ FL_BEGIN_PACK1
 typedef struct _fl_txt_msg_parser
 {
   // A buffer for message reception.
-  uint8_t       buf[FL_TXT_MSG_MAX_LENGTH];
+  uint8_t           buf[FL_TXT_MSG_MAX_LENGTH];
 
   // The number of received bytes.
-  uint8_t       buf_pos;
+  uint8_t           buf_pos;
 
-  uint8_t       receive_state;
+  uint8_t           receive_state;
 
   // Parsed message ID.
-  uint8_t       msg_id;
+  uint8_t           msg_id;
 
   // Parsed device ID.
-  uint32_t      device_id;
+  uint32_t          device_id;
 
   // Response error code.
-  fl_status_t   error;
+  fl_status_t       error;
 
   // Payload buffer(fl_hw_ver_t is the longest payload).
-  fl_hw_ver_t   payload;
+  fl_hw_ver_resp_t  payload;
 
-  uint8_t       arg_count;
+  uint8_t           arg_count;
 
-  void*         context;
+  void*             context;
 
   fl_msg_cb_on_parsed_t   on_parsed_callback;
 } fl_txt_msg_parser_t;

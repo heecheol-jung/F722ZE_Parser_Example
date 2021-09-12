@@ -164,6 +164,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="inc\fl_bin_message.h" />
+    <ClInclude Include="inc\fl_bin_message_parser.h" />
     <ClInclude Include="inc\fl_def.h" />
     <ClInclude Include="inc\fl_message_def.h" />
     <ClInclude Include="inc\fl_queue.h" />
@@ -181,6 +183,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\fl_bin_message.c" />
+    <ClCompile Include="src\fl_bin_message_parser.c" />
     <ClCompile Include="src\fl_queue.c" />
     <ClCompile Include="src\fl_txt_message.c" />
     <ClCompile Include="src\fl_txt_message_parser.c" />

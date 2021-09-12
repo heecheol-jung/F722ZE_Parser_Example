@@ -25,7 +25,7 @@ FL_DECLARE(uint8_t) fl_txt_msg_build_command(
     {
       return len;
     }
-    else if (arg_buf_len > sizeof(fl_hw_ver_t))
+    else if (arg_buf_len > sizeof(fl_hw_ver_resp_t))
     {
       return len;
     }
@@ -133,7 +133,7 @@ FL_DECLARE(fl_status_t) fl_txt_msg_build_response(
     {
       return len;
     }
-    else if (arg_buf_len > sizeof(fl_hw_ver_t))
+    else if (arg_buf_len > sizeof(fl_hw_ver_resp_t))
     {
       return len;
     }
@@ -154,8 +154,8 @@ FL_DECLARE(fl_status_t) fl_txt_msg_build_response(
       {
         // RHVER device_id,error,version_string\n
         // ex) RHVER 1,0,1.2.3\n
-        fl_hw_ver_t* hw_ver = (fl_hw_ver_t*)arg_buf;
-        if ((arg_buf_len <= sizeof(fl_hw_ver_t)) &&
+        fl_hw_ver_resp_t* hw_ver = (fl_hw_ver_resp_t*)arg_buf;
+        if ((arg_buf_len <= sizeof(fl_hw_ver_resp_t)) &&
             (strlen(hw_ver->version) > 0))
         {
           len = sprintf((char*)packet_buf, "%s %ld,%d,%s%c", 
@@ -172,8 +172,8 @@ FL_DECLARE(fl_status_t) fl_txt_msg_build_response(
       {
         // RFVER device_id,error,version_string\n
         // ex) RFVER 1,0,2.3.4\n
-        fl_fw_ver_t* fw_ver = (fl_fw_ver_t*)arg_buf;
-        if ((arg_buf_len <= sizeof(fl_fw_ver_t)) &&
+        fl_fw_ver_resp_t* fw_ver = (fl_fw_ver_resp_t*)arg_buf;
+        if ((arg_buf_len <= sizeof(fl_fw_ver_resp_t)) &&
           (strlen(fw_ver->version) > 0))
         {
           len = sprintf((char*)packet_buf, "%s %ld,%d,%s%c", 

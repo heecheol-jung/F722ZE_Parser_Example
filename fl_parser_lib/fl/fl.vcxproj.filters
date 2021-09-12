@@ -42,6 +42,12 @@
     <ClInclude Include="inc\fl_queue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="inc\fl_bin_message.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\fl_bin_message_parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -63,6 +69,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\fl_queue.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fl_bin_message.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fl_bin_message_parser.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

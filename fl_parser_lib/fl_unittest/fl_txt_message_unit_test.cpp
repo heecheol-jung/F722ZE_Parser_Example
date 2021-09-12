@@ -30,12 +30,12 @@ TEST_F(Fl_Txt_Message_UnitTest, TestReadHardwareVersionCommandMessageBuild)
 
 TEST_F(Fl_Txt_Message_UnitTest, TestReadHardwareVersionOkResponseMessageBuild)
 {
-  fl_hw_ver_t hw_ver;
+  fl_hw_ver_resp_t hw_ver;
 
   sprintf(hw_ver.version, HW_VER);
   
   _len = fl_txt_msg_build_response(DEVICE_ID, FL_MSG_ID_READ_HW_VERSION, FL_OK,
-    &hw_ver, sizeof(fl_hw_ver_t),
+    &hw_ver, sizeof(fl_hw_ver_resp_t),
     (uint8_t*)_packet_buf, sizeof(_packet_buf));
 
   EXPECT_EQ((uint8_t)18, _len);
@@ -62,12 +62,12 @@ TEST_F(Fl_Txt_Message_UnitTest, TestReadFirmwareVersionCommandMessageBuild)
 
 TEST_F(Fl_Txt_Message_UnitTest, TestReadFirmwareVersionOkResponseMessageBuild)
 {
-  fl_fw_ver_t fw_ver;
+  fl_fw_ver_resp_t fw_ver;
 
   sprintf(fw_ver.version, FW_VER);
 
   _len = fl_txt_msg_build_response(DEVICE_ID, FL_MSG_ID_READ_FW_VERSION, FL_OK,
-    &fw_ver, sizeof(fl_fw_ver_t),
+    &fw_ver, sizeof(fl_fw_ver_resp_t),
     (uint8_t*)_packet_buf, sizeof(_packet_buf));
 
   EXPECT_EQ((uint8_t)18, _len);

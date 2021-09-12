@@ -54,7 +54,7 @@ static fl_status_t  _ret;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+static void message_processing();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -101,19 +101,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    _rx_count = fl_dma_q_count(&g_app.proto_mgr.q);
-    if (_rx_count > 0)
-    {
-      for (uint32_t i = 0; i < _rx_count; i++)
-      {
-        fl_dma_q_pop(&g_app.proto_mgr.q, &_rx_data);
-        _ret = fl_txt_msg_parser_parse_command(&g_app.proto_mgr.parser_handle, _rx_data, NULL);
-        if (_ret != FL_TXT_MSG_PARSER_PARSING)
-        {
-          fl_txt_msg_parser_clear(&g_app.proto_mgr.parser_handle);
-        }
-      }
-    }
+    message_processing();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -182,7 +170,41 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+#if FW_APP_PARSER == FW_APP_TXT_PARSER
+static void message_processing()
+{
+  _rx_count = fl_dma_q_count(&g_app.proto_mgr.q);
+  if (_rx_count > 0)
+  {
+    for (uint32_t i = 0; i < _rx_count; i++)
+    {
+      fl_dma_q_pop(&g_app.proto_mgr.q, &_rx_data);
+      _ret = fl_txt_msg_parser_parse_command(&g_app.proto_mgr.parser_handle, _rx_data, NULL);
+      if (_ret != FL_TXT_MSG_PARSER_PARSING)
+      {
+        fl_txt_msg_parser_clear(&g_app.proto_mgr.parser_handle);
+      }
+    }
+  }
+}
+#else
+static void message_processing()
+{
+  _rx_count = fl_dma_q_count(&g_app.proto_mgr.q);
+  if (_rx_count > 0)
+  {
+    for (uint32_t i = 0; i < _rx_count; i++)
+    {
+      fl_dma_q_pop(&g_app.proto_mgr.q, &_rx_data);
+      _ret = fl_bin_msg_parser_parse(&g_app.proto_mgr.parser_handle, _rx_data, NULL);
+      if (_ret != FL_BIN_MSG_PARSER_PARSING)
+      {
+        fl_bin_msg_parser_clear(&g_app.proto_mgr.parser_handle);
+      }
+    }
+  }
+}
+#endif
 /* USER CODE END 4 */
 
 /**

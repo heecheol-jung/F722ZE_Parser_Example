@@ -32,7 +32,9 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+// google : stm32 usb cec SetCommState fail
+// https://community.st.com/s/question/0D50X00009XkgIYSAZ/unable-to-configure-serial-port-error-for-usb-cdc
+static uint8_t _g_lineCoding[7];
 /* USER CODE END PV */
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
@@ -221,11 +223,13 @@ static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
   /* 6      | bDataBits  |   1   | Number Data bits (5, 6, 7, 8 or 16).          */
   /*******************************************************************************/
     case CDC_SET_LINE_CODING:
-
+      // This code will be helpful to get SetCommState function succeed.
+      memcpy( _g_lineCoding, pbuf, sizeof(_g_lineCoding) );
     break;
 
     case CDC_GET_LINE_CODING:
-
+      // This code will be helpful to get SetCommState function succeed.
+      memcpy( pbuf, _g_lineCoding, sizeof(_g_lineCoding) );
     break;
 
     case CDC_SET_CONTROL_LINE_STATE:

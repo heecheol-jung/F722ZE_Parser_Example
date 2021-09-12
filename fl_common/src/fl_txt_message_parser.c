@@ -1,7 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include "fl_txt_message_parser.h"
-//#include "internal_util.h"
 
 static fl_bool_t is_command_with_arguments(uint8_t msg_id);
 static void clear_receive_buffer(fl_txt_msg_parser_t* parser_handle);
@@ -160,7 +159,7 @@ FL_DECLARE(fl_status_t) fl_txt_msg_parser_parse_command(fl_txt_msg_parser_t* par
           msg_handle->msg_id = parser_handle->msg_id;
           if (parser_handle->arg_count > 0)
           {
-            memcpy(&msg_handle->payload, &parser_handle->payload, sizeof(fl_fw_ver_t));
+            memcpy(&msg_handle->payload, &parser_handle->payload, sizeof(fl_fw_ver_resp_t));
           }
           fl_txt_msg_parser_clear(parser_handle);
         }
@@ -315,7 +314,7 @@ FL_DECLARE(fl_status_t) fl_txt_msg_parser_parse_response_event(fl_txt_msg_parser
           msg_handle->error = parser_handle->error;
           if (parser_handle->arg_count > 0)
           {
-            memcpy(&msg_handle->payload, &parser_handle->payload, sizeof(fl_fw_ver_t));
+            memcpy(&msg_handle->payload, &parser_handle->payload, sizeof(fl_fw_ver_resp_t));
           }
           fl_txt_msg_parser_clear(parser_handle);
         }
@@ -459,7 +458,7 @@ static fl_bool_t process_response_event_data(fl_txt_msg_parser_t* parser_handle)
   {
     if (parser_handle->arg_count == 0)
     {
-      fl_hw_ver_t* hw_ver = (fl_hw_ver_t*)&parser_handle->payload;
+      fl_hw_ver_resp_t* hw_ver = (fl_hw_ver_resp_t*)&parser_handle->payload;
       memcpy(hw_ver->version, parser_handle->buf, parser_handle->buf_pos);
       parser_handle->arg_count++;
       ret = FL_TRUE;
@@ -469,7 +468,7 @@ static fl_bool_t process_response_event_data(fl_txt_msg_parser_t* parser_handle)
   {
     if (parser_handle->arg_count == 0)
     {
-      fl_fw_ver_t* fw_ver = (fl_fw_ver_t*)&parser_handle->payload;
+      fl_fw_ver_resp_t* fw_ver = (fl_fw_ver_resp_t*)&parser_handle->payload;
       memcpy(fw_ver->version, parser_handle->buf, parser_handle->buf_pos);
       parser_handle->arg_count++;
       ret = FL_TRUE;

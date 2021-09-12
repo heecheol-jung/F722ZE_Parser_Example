@@ -51,7 +51,7 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-static void txt_message_processing(void);
+static void message_processing(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -97,7 +97,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    txt_message_processing();
+    message_processing();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -166,7 +166,8 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-static void txt_message_processing(void)
+#if FW_APP_PARSER == FW_APP_TXT_PARSER
+static void message_processing(void)
 {
   fl_status_t ret = 0;
 
@@ -256,13 +257,19 @@ static void txt_message_processing(void)
       case FL_MSG_ID_WRITE_REGISTER:
         if (g_app.proto_mgr.parser_handle.arg_count == 2)
         {
-          //fl_write_reg_t* wreg = (fl_write_reg_t*)&(g_app.proto_mgr.parser_handle.payload);
+          fl_write_reg_t* wreg = (fl_write_reg_t*)&(g_app.proto_mgr.parser_handle.payload);
           // TODO : Write a value to a register.
-          g_app.proto_mgr.out_length = sprintf((char*)g_app.proto_mgr.out_buf, "%s %ld,%d%c",
-                      fl_txt_msg_get_message_name(g_app.proto_mgr.parser_handle.msg_id),
-                      g_app.proto_mgr.parser_handle.device_id,
-                      FL_OK,
-                      FL_TXT_MSG_TAIL);
+
+          // For fail response test.
+          if ((wreg->address == 3) &&
+              (wreg->value == 4))
+          {
+            g_app.proto_mgr.out_length = sprintf((char*)g_app.proto_mgr.out_buf, "%s %ld,%d%c",
+                fl_txt_msg_get_message_name(g_app.proto_mgr.parser_handle.msg_id),
+                g_app.proto_mgr.parser_handle.device_id,
+                FL_OK,
+                FL_TXT_MSG_TAIL);
+          }
         }
 
         if (g_app.proto_mgr.out_length == 0)
@@ -285,8 +292,110 @@ static void txt_message_processing(void)
       fl_txt_msg_parser_clear(&g_app.proto_mgr.parser_handle);
     }
   }
-
 }
+#else
+static void message_processing(void)
+{
+  fl_status_t ret = 0;
+
+  if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_RXNE))
+  {
+    HAL_UART_Receive(&huart3, g_app.proto_mgr.rx_buf, 1, FW_APP_PROTO_RX_TIMEOUT);
+    ret = fl_bin_msg_parser_parse(&g_app.proto_mgr.parser_handle, g_app.proto_mgr.rx_buf[0], NULL);
+    if (ret == FL_OK)
+    {
+      fl_bin_msg_header_t*  header = (fl_bin_msg_header_t*)&g_app.proto_mgr.parser_handle.buf[1];
+      fl_bin_msg_full_t*    rx_msg_full = (fl_bin_msg_full_t*)g_app.proto_mgr.parser_handle.buf;
+      fl_bin_msg_full_t*    tx_msg_full = (fl_bin_msg_full_t*)g_app.proto_mgr.out_buf;
+      if (header->device_id != g_app.device_id)
+      {
+        fl_bin_msg_parser_clear(&g_app.proto_mgr.parser_handle);
+        return;
+      }
+
+      tx_msg_full->header.device_id = header->device_id;
+      tx_msg_full->header.message_id = header->message_id;
+      tx_msg_full->header.flag1.sequence_num = header->flag1.sequence_num;
+      tx_msg_full->header.flag1.return_expected = FL_FALSE;
+      tx_msg_full->header.error = FL_OK;
+
+      g_app.proto_mgr.out_length = 0;
+
+      switch (header->message_id)
+      {
+      case FL_MSG_ID_READ_HW_VERSION:
+      {
+        fl_hw_ver_resp_t* hw_ver = (fl_hw_ver_resp_t*)&(tx_msg_full->payload);
+        sprintf(hw_ver->version, "%d.%d.%d", FW_APP_HW_MAJOR, FW_APP_HW_MINOR, FW_APP_HW_REVISION);
+        g_app.proto_mgr.out_length = fl_bin_msg_build_response((uint8_t*)g_app.proto_mgr.out_buf, sizeof(g_app.proto_mgr.out_buf));
+        break;
+      }
+
+      case FL_MSG_ID_READ_FW_VERSION:
+      {
+        fl_fw_ver_resp_t* fw_ver = (fl_fw_ver_resp_t*)&(tx_msg_full->payload);
+        sprintf(fw_ver->version, "%d.%d.%d", FW_APP_FW_MAJOR, FW_APP_FW_MINOR, FW_APP_FW_REVISION);
+        g_app.proto_mgr.out_length = fl_bin_msg_build_response((uint8_t*)g_app.proto_mgr.out_buf, sizeof(g_app.proto_mgr.out_buf));
+        break;
+      }
+
+      case FL_MSG_ID_BOOT_MODE:
+      {
+        fl_boot_mode_t* bmode = (fl_boot_mode_t*)&(rx_msg_full->payload);
+        if ((bmode->boot_mode != FL_BMODE_APP) &&
+            (bmode->boot_mode != FL_BMODE_BOOTLOADER))
+        {
+          tx_msg_full->header.error = FL_ERROR;
+        }
+        g_app.proto_mgr.out_length = fl_bin_msg_build_response((uint8_t*)g_app.proto_mgr.out_buf, sizeof(g_app.proto_mgr.out_buf));
+        break;
+      }
+
+      case FL_MSG_ID_RESET:
+        g_app.proto_mgr.out_length = fl_bin_msg_build_response((uint8_t*)g_app.proto_mgr.out_buf, sizeof(g_app.proto_mgr.out_buf));
+        break;
+
+      case FL_MSG_ID_READ_REGISTER:
+      {
+        fl_read_reg_t* rreg = (fl_read_reg_t*)&(rx_msg_full->payload);
+        // TODO : Check the validity of an address.
+        fl_read_reg_resp_t* rreg_resp = (fl_read_reg_resp_t*)&(tx_msg_full->payload);
+        rreg_resp->address = rreg->address;
+        rreg_resp->value = 10;
+
+        g_app.proto_mgr.out_length = fl_bin_msg_build_response((uint8_t*)g_app.proto_mgr.out_buf, sizeof(g_app.proto_mgr.out_buf));
+        break;
+      }
+
+      case FL_MSG_ID_WRITE_REGISTER:
+      {
+        fl_write_reg_t* wreg = (fl_write_reg_t*)&(rx_msg_full->payload);
+        // TODO : Check the validity of an address.
+        // TODO : Check the validity of a value.
+
+        // For fail response test.
+        if ((wreg->address != 3) ||
+            (wreg->value != 4))
+        {
+          tx_msg_full->header.error = FL_ERROR;
+        }
+
+        g_app.proto_mgr.out_length = fl_bin_msg_build_response((uint8_t*)g_app.proto_mgr.out_buf, sizeof(g_app.proto_mgr.out_buf));
+        break;
+      }
+      }
+
+      if (g_app.proto_mgr.out_length > 0)
+      {
+        HAL_UART_Transmit(g_app.proto_mgr.uart_handle, g_app.proto_mgr.out_buf, g_app.proto_mgr.out_length, FW_APP_PROTO_TX_TIMEOUT);
+      }
+      g_app.proto_mgr.out_length = 0;
+
+      fl_bin_msg_parser_clear(&g_app.proto_mgr.parser_handle);
+    }
+  }
+}
+#endif
 /* USER CODE END 4 */
 
 /**

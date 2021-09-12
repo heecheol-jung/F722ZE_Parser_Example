@@ -42,7 +42,7 @@ FL_BEGIN_DECLS
 // Device IDs
 #define FL_DEVICE_ID_UNKNOWN                (0)
 
-#define FL_DEVICE_ID_ALL                    (0xFFFFFFFF)  // Device broadcasting.
+#define FL_DEVICE_ID_ALL                    (0xFFFF)  // Device broadcasting.
 
 #define FL_BUTTON_RELEASED                  (0)
 
@@ -77,15 +77,15 @@ FL_BEGIN_PACK1
 ///////////////////////////////////////////////////////////////////////////////
 // structs for messages.
 ///////////////////////////////////////////////////////////////////////////////
-typedef struct _fl_hw_ver
+typedef struct _fl_hw_ver_resp
 {
   char        version[FL_VER_STR_MAX_LEN];
-} fl_hw_ver_t;
+} fl_hw_ver_resp_t;
 
-typedef struct _fl_fw_ver
+typedef struct _fl_fw_ver_resp
 {
   char        version[FL_VER_STR_MAX_LEN];
-} fl_fw_ver_t;
+} fl_fw_ver_resp_t;
 
 typedef struct _fl_boot_mode
 {
